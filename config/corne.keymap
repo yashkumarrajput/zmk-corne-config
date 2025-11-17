@@ -10,6 +10,7 @@
 
 / {
     behaviors {
+        // Homerow mods for base layer
         hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -19,6 +20,46 @@
             bindings = <&kp>, <&kp>;
         };
         
+        // Mod-tap for Z key (Left Shift when held)
+        mt_z: mod_tap_z {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        
+        // Mod-tap for / key (Right Shift when held)
+        mt_slash: mod_tap_slash {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        
+        // Layer-tap for thumb keys
+        lt_num: layer_tap_num {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+        
+        lt_sign: layer_tap_sign {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+        
+        // Tap dance for ESC/CAPS
         td_esc: tap_dance_esc {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -30,48 +71,67 @@
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        // BASE Layer (0) - QWERTY with mod-taps
+        base_layer {
 // -----------------------------------------------------------------------------------------
 // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BSPC |
-// |ESC/CP| A/CT| S/AL| D/GUI|F/SHF|  G  |   |  H  |J/SHF |K/GUI |L/ALT |;/CT |  '   |
-// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | SHFT |
-//                    | GUI | LWR | ENT |   | SPC | RSE  | ALT |
+// | ESC  | A/CT| S/AL| D/GUI|F/SHF|  G  |   |  H  |J/SHF |K/GUI |L/ALT |;/CT |  '   |
+// | SHFT | Z/SF|  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |//SF | SHFT |
+//                    | GUI |NUM/SPC|SIGN/ENT| | SPC |NUM/BSP| ALT |
             bindings = <
-   &kp TAB    &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-   &td_esc    &hm LCTRL A &hm LALT S &hm LGUI D &hm LSHFT F &kp G   &kp H &hm RSHFT J &hm RGUI K &hm RALT L &hm RCTRL SEMI &kp SQT
-   &kp LSHFT  &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RSHFT
-                    &kp LGUI &mo 1 &kp RET   &kp SPACE &mo 2 &kp RALT
+   &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
+   &td_esc   &hm LCTRL A &hm LALT S &hm LGUI D &hm LSHFT F &kp G   &kp H &hm RSHFT J &hm RGUI K &hm RALT L &hm RCTRL SEMI &kp SQT
+   &kp LSHFT &mt_z LSHFT Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &mt_slash RSHFT FSLH &kp RSHFT
+                          &kp LGUI &lt_num 1 SPACE &lt_sign 2 RET   &kp SPACE &lt_num 1 BSPC &kp RALT
             >;
         };
 
-        lower_layer {
+        // NUM Layer (1) - Numbers and symbols
+        num_layer {
 // -----------------------------------------------------------------------------------------
-// |  `   |  (  |  )  |  [  |  ]  |  {  |   |  }  |  7  |  8  |  9  |  0  | DEL  |
-// | CTRL |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  |      |
-// | SHFT | F1  | F2  | F3  | F4  | F5  |   | F6  | F7  | F8  | F9  | F10 |      |
+// |  `   |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | DEL  |
+// | CTRL |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  |  \   |
+// | SHFT |  -  |  =  |  [  |  ]  |  {  |   |  }  |  _  |  +  |  |  | F/FN| SHFT |
 //                    | GUI |     | ENT |   | SPC |     | ALT |
             bindings = <
-   &kp GRAVE  &kp LPAR &kp RPAR &kp LBKT &kp RBKT &kp LBRC   &kp RBRC &kp N7 &kp N8 &kp N9 &kp N0 &kp DEL
-   &kp LCTRL  &kp N1   &kp N2   &kp N3   &kp N4   &kp N5     &kp N6   &kp N7 &kp N8 &kp N9 &kp N0 &trans
-   &kp LSHFT  &kp F1   &kp F2   &kp F3   &kp F4   &kp F5     &kp F6   &kp F7 &kp F8 &kp F9 &kp F10 &trans
-                                &kp LGUI &trans   &kp RET    &kp SPACE &mo 3 &kp RALT
+   &kp GRAVE &kp N1   &kp N2    &kp N3   &kp N4   &kp N5     &kp N6   &kp N7    &kp N8    &kp N9   &kp N0   &kp DEL
+   &kp LCTRL &kp EXCL &kp AT    &kp HASH &kp DLLR &kp PRCNT  &kp CARET &kp AMPS &kp ASTRK &kp LPAR &kp RPAR &kp BSLH
+   &kp LSHFT &kp MINUS &kp EQUAL &kp LBKT &kp RBKT &kp LBRC  &kp RBRC &kp UNDER &kp PLUS  &kp PIPE &mo 3    &kp RSHFT
+                                &kp LGUI &trans   &kp RET    &kp SPACE &trans   &kp RALT
             >;
         };
 
-        raise_layer {
+        // SIGN Layer (2) - Navigation, symbols, and media
+        sign_layer {
 // -----------------------------------------------------------------------------------------
-// |  ~   |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  | HOME| END | BSPC |
-// | CTRL |     |     |     |     |     |   |  -  |  =  | PGUP| PGDN|  \  |  `   |
-// | SHFT |     |     |     |     |     |   |  _  |  +  | LFT | DWN |  UP | RGT  |
-//                    | GUI |     | ENT |   | SPC |     | ALT |
+// |  ~   | F1  | F2  | F3  | F4  | F5  |   | F6  | F7  | F8  | F9  | F10 | F11  |
+// | CTRL |     |     |     |     |     |   | LFT | DWN |  UP | RGT | HOME| END  |
+// | SHFT |     |     |     |     |     |   | MUTE| VOLD| VOLU| PREV| NEXT| PLAY |
+//                    | GUI | FN  |     |   | SPC |     | ALT |
             bindings = <
-   &kp TILDE &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp ASTRK &kp HOME &kp END &kp BSPC
-   &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp PG_UP &kp PG_DN &kp BSLH &kp GRAVE
-   &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LEFT &kp DOWN &kp UP &kp RIGHT
-                             &kp LGUI &mo 3    &kp RET     &kp SPACE &trans    &kp RALT
+   &kp TILDE &kp F1 &kp F2 &kp F3 &kp F4 &kp F5   &kp F6 &kp F7 &kp F8 &kp F9 &kp F10 &kp F11
+   &kp LCTRL &trans &trans &trans &trans &trans   &kp LEFT &kp DOWN &kp UP &kp RIGHT &kp HOME &kp END
+   &kp LSHFT &trans &trans &trans &trans &trans   &kp C_MUTE &kp C_VOL_DN &kp C_VOL_UP &kp C_PREV &kp C_NEXT &kp C_PP
+                           &kp LGUI &mo 3 &trans   &kp SPACE &trans &kp RALT
             >;
         };
 
+        // FN Layer (3) - Function keys and system controls
+        fn_layer {
+// -----------------------------------------------------------------------------------------
+// | F12  | F1  | F2  | F3  | F4  | F5  |   | F6  | F7  | F8  | F9  | F10 | F11  |
+// | CTRL |     |     |     |     |     |   |     |     |     |     |     | F12  |
+// | SHFT |     |     |     |     |BOOTL|   |     |     |     |     |     | SHFT |
+//                    | GUI |     | ENT |   | SPC | ADJ | ALT |
+            bindings = <
+   &kp F12   &kp F1 &kp F2 &kp F3 &kp F4 &kp F5      &kp F6 &kp F7 &kp F8 &kp F9 &kp F10 &kp F11
+   &kp LCTRL &trans &trans &trans &trans &trans      &trans &trans &trans &trans &trans  &kp F12
+   &kp LSHFT &trans &trans &trans &trans &bootloader &trans &trans &trans &trans &trans  &kp RSHFT
+                           &kp LGUI &trans &kp RET    &kp SPACE &mo 4 &kp RALT
+            >;
+        };
+
+        // Bluetooth/Adjust Layer (4) - Preserved from original
         adjust_layer {
 // -----------------------------------------------------------------------------------------
 // | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   |     |     |     |     |     |      |
